@@ -281,10 +281,8 @@ class MainApp(QMainWindow):
         self.t_score_lbl = QLabel("0", parent=self)
 
         self.round_stats = RoundStatsWidget(parent=self)
-        self.round_stats.testy()
 
         self.kills = KillsWidget(parent=self)
-        self.kills.testy()
         if self.stats_active:
             self.kills.hide()
 
@@ -332,5 +330,7 @@ if __name__ == '__main__':
     app = QApplication([])
     app.setStyleSheet(DARK_STYLE)
     window = MainApp("Another OW Revealer 2")
+    window.kills.testy()
+    window.round_stats.testy()
     window.show()
     sys.exit(app.exec())
