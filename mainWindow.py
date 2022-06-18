@@ -132,41 +132,31 @@ class MainApp(QMainWindow):
         self.prev_link_timer = PrevLinkTimer(self)
         self.prev_link_timer.reset_timer_sig.emit()
 
-        self.switch_stats_kills = QPushButton("Show Kills")
-        self.switch_stats_kills.setParent(self)
+        self.switch_stats_kills = QPushButton("Show Kills", parent=self)
 
-        self.download_demo = QPushButton("Download DEMO")
-        self.download_demo.setParent(self)
+        self.download_demo = QPushButton("Download DEMO", parent=self)
 
-        self.prev_round = QPushButton("<")
-        self.prev_round.setParent(self)
-        self.next_round = QPushButton(">")
-        self.next_round.setParent(self)
+        self.prev_round = QPushButton("<", parent=self)
+        self.next_round = QPushButton(">", parent=self)
 
         self.round_switch = QComboBox(self)
         self.round_switch.addItem("Round ??")
 
-        self.map_lbl = QLabel("cs_office")
-        self.map_lbl.setParent(self)
+        self.map_lbl = QLabel("cs_office", parent=self)
         self.map_lbl.setStyleSheet("font: 11pt; color: green")
         self.map_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.server_lbl = QLabel("EU North")
-        self.server_lbl.setParent(self)
+        self.server_lbl = QLabel("EU North", parent=self)
         self.server_lbl.setStyleSheet("font: 11pt; color: pink")
         self.server_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.add_to_watchlist = QPushButton("Add to WatchList")
-        self.add_to_watchlist.setParent(self)
+        self.add_to_watchlist = QPushButton("Add to WatchList", parent=self)
 
-        self.show_watchlist = QPushButton("WatchList")
-        self.show_watchlist.setParent(self)
+        self.show_watchlist = QPushButton("WatchList", parent=self)
 
-        self.show_links = QPushButton("LINK List")
-        self.show_links.setParent(self)
+        self.show_links = QPushButton("LINK List", parent=self)
 
-        self.show_settings = QPushButton("Settings")
-        self.show_settings.setParent(self)
+        self.show_settings = QPushButton("Settings", parent=self)
 
         self.update_geometry()
 
