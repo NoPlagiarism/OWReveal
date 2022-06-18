@@ -10,8 +10,8 @@ from enum import IntEnum
 
 
 class PlayerSide(IntEnum):
-    CT = 0
-    T = 1
+    CT = 1
+    T = 2
 
 
 class IndicLabel(QLabel):
@@ -192,8 +192,8 @@ class Kill(QWidget):
         self.weapon.setText(weapon)
         self.p2_lbl.setText(p2[0])
 
-        self.p1_lbl.setStyleSheet("color: red") if p1[1] == PlayerSide.T else self.p1_lbl.setStyleSheet("color: blue")
-        self.p2_lbl.setStyleSheet("color: red") if p1[1] == PlayerSide.T else self.p1_lbl.setStyleSheet("color: blue")
+        self.p1_lbl.setStyleSheet("color: red;") if p1[1] == PlayerSide.T else self.p1_lbl.setStyleSheet("color: blue;")
+        self.p2_lbl.setStyleSheet("color: red;") if p2[1] == PlayerSide.T else self.p2_lbl.setStyleSheet("color: blue;")
 
 
 class KillsWidget(QWidget):
