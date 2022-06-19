@@ -131,17 +131,22 @@ class Player(QWidget):
         self.kad = QLabel("0/0/0")
         self.setup_ui_ct() if side == PlayerSide.CT else self.setup_ui_t()
 
-    def setup_ui_ct(self):
+    def setup_ui_t(self):
         self.lay.addWidget(self.checkbox, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.name, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.icon, alignment=Qt.AlignmentFlag.AlignRight)
         self.lay.addWidget(self.kad, alignment=Qt.AlignmentFlag.AlignRight)
 
-    def setup_ui_t(self):
+    def setup_ui_ct(self):
         self.lay.addWidget(self.kad, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.icon, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.name, alignment=Qt.AlignmentFlag.AlignRight)
         self.lay.addWidget(self.checkbox, alignment=Qt.AlignmentFlag.AlignRight)
+
+    def update_data(self, name, rank, kad):
+        self.name.setText(name)
+        self.icon.setPixmap(self.rank_translate[rank])
+        self.kad.setText(kad)
 
 
 class RoundStatsWidget(QWidget):
@@ -151,6 +156,9 @@ class RoundStatsWidget(QWidget):
         for i in range(19):
             self.rank_translate[i] = QPixmap(rf"resources\csgo_rank_icons\{i}.png")
 
+        self.stats = {PlayerSide.T: [Player(side=PlayerSide.T) for _ in range(5)],
+                      PlayerSide.CT: [Player(side=PlayerSide.CT) for _ in range(5)]}
+
         self.main_lay = QHBoxLayout(self)
         self.setLayout(self.main_lay)
         self.ct_lay = QVBoxLayout()
@@ -158,16 +166,45 @@ class RoundStatsWidget(QWidget):
         self.main_lay.addLayout(self.ct_lay)
         self.main_lay.addLayout(self.t_lay)
 
+        for x in self.stats[PlayerSide.CT]:
+            self.ct_lay.addWidget(x)
+        for x in self.stats[PlayerSide.T]:
+            self.t_lay.addWidget(x)
+
+    def update_data(self, data):
+        for ct in range(5):
+            try:
+                player = data[PlayerSide.CT][ct]
+            except IndexError:
+                self.stats[PlayerSide.CT][ct].hide()
+                continue
+            if self.stats[PlayerSide.CT][ct].isHidden():
+                self.stats[PlayerSide.CT][ct].show()
+            self.stats[PlayerSide.CT][ct].update_data(*player)
+        for t in range(5):
+            try:
+                player = data[PlayerSide.T][t]
+            except IndexError:
+                self.stats[PlayerSide.T][t].hide()
+                continue
+            if self.stats[PlayerSide.T][t].isHidden():
+                self.stats[PlayerSide.T][t].show()
+            self.stats[PlayerSide.T][t].update_data(*player)
+
     def testy(self):
+        data = {PlayerSide.CT: list(), PlayerSide.T: list()}
+        for i in range(5):
+            data[PlayerSide.CT].append(("FCK", PlayerSide.CT, "2/00/7"))
         for _ in range(5):
-            self.ct_lay.addWidget(Player(side=0))
-        for _ in range(5):
-            self.t_lay.addWidget(Player(side=1))
+            data[PlayerSide.T].append(("PTN", PlayerSide.T, "2/00/7"))
+        self.update_data(data)
 
 
 class Kill(QWidget):
     def __init__(self, *args, p1=None, weapon=None, p2=None, **kwargs):
         super(Kill, self).__init__(*args, **kwargs)
+
+        self.cleared = True
 
         self.lay = QHBoxLayout(self)
         self.setLayout(self.lay)
@@ -194,11 +231,19 @@ class Kill(QWidget):
 
         self.p1_lbl.setStyleSheet("color: red;") if p1[1] == PlayerSide.T else self.p1_lbl.setStyleSheet("color: blue;")
         self.p2_lbl.setStyleSheet("color: red;") if p2[1] == PlayerSide.T else self.p2_lbl.setStyleSheet("color: blue;")
+        self.cleared = False
+
+    def clear(self):
+        self.p1_lbl.clear()
+        self.weapon.clear()
+        self.p2_lbl.clear()
+        self.cleared = True
 
 
 class KillsWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super(KillsWidget, self).__init__(*args, **kwargs)
+        self.kills = [Kill() for _ in range(10)]
 
         self.main_lay = QHBoxLayout(self)
         self.setLayout(self.main_lay)
@@ -207,11 +252,23 @@ class KillsWidget(QWidget):
         self.main_lay.addLayout(self.a_lay)
         self.main_lay.addLayout(self.b_lay)
 
+        for index, kill in enumerate(self.kills):
+            if index < 5:
+                self.a_lay.addWidget(kill)
+            else:
+                self.b_lay.addWidget(kill)
+
+    def update_data(self, data):
+        for i in range(len(data)):
+            self.kills[i].update_data(*data[i])
+        for i in range(len(data), len(self.kills)):
+            if self.kills[i].cleared:
+                return
+            self.kills[i].clear()
+
     def testy(self):
-        for _ in range(5):
-            self.a_lay.addWidget(Kill(p1=("PTN", PlayerSide.T), weapon="suicide", p2=("PTN", PlayerSide.CT)))
-        for _ in range(5):
-            self.b_lay.addWidget(Kill(p1=("PTN", PlayerSide.CT), weapon="suicide", p2=("PTN", PlayerSide.T)))
+        data = [(("PTN", PlayerSide.T), "suicide", ("PTN", PlayerSide.CT)) for _ in range(10)]
+        self.update_data(data)
 
 
 class MainApp(QMainWindow):
@@ -308,8 +365,8 @@ class MainApp(QMainWindow):
         self.show_settings.setGeometry(self.get_geometry_from_percent(0.9, 0.87, 0.09, 0.08))
         self.ct_score_lbl.setGeometry(self.get_geometry_from_percent(0.15, 0.42, 0.1, 0.08))
         self.t_score_lbl.setGeometry(self.get_geometry_from_percent(0.65, 0.42, 0.1, 0.08))
-        self.round_stats.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.49))
-        self.kills.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.49))
+        self.round_stats.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.50))
+        self.kills.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.50))
 
     def resizeEvent(self, a0) -> None:
         self.update_geometry()
