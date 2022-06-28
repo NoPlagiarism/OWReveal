@@ -17,6 +17,6 @@ QPushButton {
     color: #f1f1f1;
 }
 QPushButton:pressed {
-    background: #404040
+    background: #404040;
 }
 """
