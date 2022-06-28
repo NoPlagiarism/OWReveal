@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QRect, pyqtSignal, pyqtSlot, QTimer
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QLabel, QComboBox, QPushButton, QLineEdit, QApplication, QCheckBox,
-                             QGridLayout, QHBoxLayout, QVBoxLayout, QLayoutItem, QSizePolicy, QSpacerItem)
+                             QHBoxLayout, QVBoxLayout)
 from PyQt6.QtGui import QPixmap
 from stylesheet import DARK_STYLE
 from PIL import Image
