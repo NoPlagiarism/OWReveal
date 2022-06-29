@@ -26,7 +26,7 @@ class SettingButton(QPushButton):
         self.state = checked
 
 
-class SettingsWindow(QMainWindow):
+class SettingsWindow(QWidget):
     SIZE_X, SIZE_Y = 580, 445
     START_X = 0.01
     START_Y = 0.01
@@ -38,7 +38,7 @@ class SettingsWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setWindowTitle("Settings")
+        # self.setWindowTitle("Settings")
         self.setFixedSize(self.SIZE_X, self.SIZE_Y)
         self.buttons = list()
 
@@ -118,8 +118,11 @@ class SettingsWindow(QMainWindow):
 
 
 if __name__ == '__main__':
+    class SettingsEx(QMainWindow, SettingsWindow):
+        pass
     app = QApplication([])
     app.setStyleSheet(DARK_STYLE)
-    widget = SettingsWindow()
+    widget = SettingsEx()
+    widget.setWindowTitle("Settings")
     widget.show()
     sys.exit(app.exec())
