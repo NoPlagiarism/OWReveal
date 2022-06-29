@@ -131,13 +131,13 @@ class Player(QWidget):
         self.kad = QLabel("0/0/0")
         self.setup_ui_ct() if side == PlayerSide.CT else self.setup_ui_t()
 
-    def setup_ui_t(self):
+    def setup_ui_ct(self):
         self.lay.addWidget(self.checkbox, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.name, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.icon, alignment=Qt.AlignmentFlag.AlignRight)
         self.lay.addWidget(self.kad, alignment=Qt.AlignmentFlag.AlignRight)
 
-    def setup_ui_ct(self):
+    def setup_ui_t(self):
         self.lay.addWidget(self.kad, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.icon, alignment=Qt.AlignmentFlag.AlignLeft)
         self.lay.addWidget(self.name, alignment=Qt.AlignmentFlag.AlignRight)
@@ -348,7 +348,7 @@ class MainApp(QMainWindow):
     def update_geometry(self):
         self.interface_sel.setGeometry(self.get_geometry_from_percent(0, 0, 0.785, 0.08))
         self.lbl_indicator.setGeometry(self.get_geometry_from_percent(0, 0.1, 0.785, 0.12))
-        self.start_btn.setGeometry(self.get_geometry_from_percent(0.8, 0, 0.18, 0.2))
+        self.start_btn.setGeometry(self.get_geometry_from_percent(0.8, 0, 0.18, 0.22))
         self.url_edit.setGeometry(self.get_geometry_from_percent(0, 0.24, 0.99, 0.09))
         self.demos_counter.setGeometry(self.get_geometry_from_percent(0, 0.33, 0.12, 0.08))
         self.prev_link_timer.setGeometry(self.get_geometry_from_percent(0.13, 0.33, 0.5, 0.08))
@@ -365,8 +365,8 @@ class MainApp(QMainWindow):
         self.show_settings.setGeometry(self.get_geometry_from_percent(0.9, 0.87, 0.09, 0.08))
         self.ct_score_lbl.setGeometry(self.get_geometry_from_percent(0.15, 0.42, 0.1, 0.08))
         self.t_score_lbl.setGeometry(self.get_geometry_from_percent(0.65, 0.42, 0.1, 0.08))
-        self.round_stats.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.50))
-        self.kills.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.75, 0.50))
+        self.round_stats.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.8, 0.50))
+        self.kills.setGeometry(self.get_geometry_from_percent(0, 0.5, 0.8, 0.50))
 
     def resizeEvent(self, a0) -> None:
         self.update_geometry()
